@@ -1,8 +1,8 @@
 import React from 'react'
 
-function Footer(verion) {
-  return (
-    <div>{verion}</div>
+function Footer(props) {
+    return (
+      <div>{props.version}</div>
   )
 }
 
