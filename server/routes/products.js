@@ -23,9 +23,19 @@ router.get('/:id', function(req, res, next) {
         return res.status(200).json(product)
     }else{
         return res.status(404).json()
+    try{
+        const id = req.params.id;
+        const product = DUMMY_PRODUCT_LIST.find((item) => item._id === id)
+        if(product){
+            return res.status(200).json(product)
+        }else{
+            return res.status(404).json()
+        }
+    }catch(err){
+        return res.status(500).json()
     }
 
-});
+}});
 // TODO :
 // Create Product
 
