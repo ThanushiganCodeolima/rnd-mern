@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
-
+import './index.css'
+import Content from './Components/Content'
+import Footer from './Components/Footer';
+import Header from './Components/Header'
+import LifecycleA from './Components/LifecycleA';
+import Navbar from './Components/Navbar';
 function App() {
+  const appName = `Codeolima Web App`
+  const verion = process.env.VERSION;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <Navbar />
+      <div className='content'>
+        <Content />
+      </div>
+      {/*<Header appName={appName}/>
+      <Footer verion={verion}/>
+      <LifecycleA />*/}
     </div>
   );
 }
