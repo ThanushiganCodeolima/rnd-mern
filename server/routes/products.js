@@ -1,30 +1,27 @@
 var express = require('express');
-var router = express.Router('express');
+const { v4: uuidv4 } = require('uuid');
 const { DUMMY_PRODUCT_LIST } = require('../dummy/dummy-products');
 var router = express.Router();
+var Products = require('../models/products')
 
 // List Products 
-router.get('/', function(req, res, next) {
-
-    return res.status(200).json(DUMMY_PRODUCT_LIST)
-    const products = DUMMY_PRODUCT_LIST
-    return res.status(200).json(products)
+router.get('/', async (req, res, next) => {
+  
+    try{
+        const productList = await Products.find({}).exec()
+        return res.status(200).json(productList)
+    }catch(e){
+        res.status(500).json()
+    }
 
 });
 
-
 // Product Get By Id 
-router.get('/:id', function(req, res, next) {
-
-    const id = req.params.id;
-    const product = DUMMY_PRODUCT_LIST.find((item) => item._id === id)
-    if(product){
-        return res.status(200).json(product)
-    }else{
-        return res.status(404).json()
+router.get('/:id', async (req, res, next) => {
+    
     try{
-        const id = req.params.id;
-        const product = DUMMY_PRODUCT_LIST.find((item) => item._id === id)
+        const _id = req.params.id;
+        const product = await Products.findOne({_id : _id }).exec()        
         if(product){
             return res.status(200).json(product)
         }else{
@@ -34,16 +31,32 @@ router.get('/:id', function(req, res, next) {
         return res.status(500).json()
     }
 
-}});
-// TODO :
+});
+
 // Create Product
+router.post('/', async (req, res, next) => {
+    
+    try{
+        const { name, price } = req.body;
+        if(name && price){
+            const newProduct = new Products({ name, price })
+            await newProduct.save()
+            // TODO : if product already exsist in db should return 409 
+            return res.status(200).json(newProduct)
+        }else{
+            return res.status(400).json()
+        }
+    }catch(err){
+        return res.status(500).json(err)
+    }
+
+});
 
 // Product Update by Id 
 
-// Delete Product
 // Delete Product by Id
 router.delete('/:id', function(req, res, next) {
-
+    
     try{
         const id = req.params.id;
         // Start : Should replace by Actual DB Query 
@@ -66,5 +79,4 @@ router.delete('/:id', function(req, res, next) {
 
 
 
-
-module.exports = router;
+module.exports = router
