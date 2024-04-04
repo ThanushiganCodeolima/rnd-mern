@@ -2,26 +2,27 @@ var express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const { DUMMY_PRODUCT_LIST } = require('../dummy/dummy-products');
 var router = express.Router();
-var Products = require('../models/products')
+var Product = require('../models/products')
 
 // List Products 
 router.get('/', async (req, res, next) => {
-  
+  console.log('Run')
     try{
-        const productList = await Products.find({}).exec()
+        const productList = await Product.find({}).exec()
         return res.status(200).json(productList)
     }catch(e){
-        res.status(500).json()
+        res.status(500).json(e)
     }
 
 });
 
-// Product Get By Id 
+// Product Get By Id
 router.get('/:id', async (req, res, next) => {
     
     try{
         const _id = req.params.id;
-        const product = await Products.findOne({_id : _id }).exec()        
+        const product = await Product.findOne({_id : _id }).exec()
+        console.log(_id)     
         if(product){
             return res.status(200).json(product)
         }else{
@@ -34,12 +35,47 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // Create Product
+router.put('/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const { name, description, price, timestamp } = req.body;
+        console.log(name, description, price, timestamp);
+
+        if (!name) {
+            return res.status(400).json("Name is not defined");
+        }
+
+        if (!description) {
+            return res.status(400).json("Description is not defined");
+        }
+
+        if (!price || isNaN(price)) {
+            return res.status(400).json("Price is not defined or is not a number");
+        }
+
+        if (!timestamp) {
+            return res.status(400).json("Timestamp is not defined");
+        }
+
+        const product = await Product.updateOne({ _id: id }, { name: name, description: description, price: price, timestamp: timestamp });
+        
+        if (product) {
+            return res.status(200).json(product);
+        } else {
+            return res.status(404).json();
+        }
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+});
+
+// Create Product
 router.post('/', async (req, res, next) => {
     
     try{
-        const { name, price } = req.body;
-        if(name && price){
-            const newProduct = new Products({ name, price })
+        const {_id, name,description, price,timestamp } = req.body;
+        if(_id && name && description && price && !isNaN(price) && timestamp){
+            const newProduct = new Product({"_id":_id,"name":name, "description":description, "price":price, "timestamp":timestamp});
             await newProduct.save()
             // TODO : if product already exsist in db should return 409 
             return res.status(200).json(newProduct)
@@ -52,31 +88,21 @@ router.post('/', async (req, res, next) => {
 
 });
 
-// Product Update by Id 
-
 // Delete Product by Id
-router.delete('/:id', function(req, res, next) {
-    
+router.delete('/:id', async (req, res, next) => {
     try{
         const id = req.params.id;
-        // Start : Should replace by Actual DB Query 
-        const product = DUMMY_PRODUCT_LIST.find((item) => item._id === id)
-        // End 
+        const product = await Product.deleteOne({_id: id});
         if(product){
-            // Start : Should replace by Actual DB Query 
-            const index = DUMMY_PRODUCT_LIST.findIndex((item) => item._id === product._id)
-            DUMMY_PRODUCT_LIST.splice(index, 1)
-            // End 
-            return res.status(200).json()
-        }else{
+            return res.status(200).json(product)
+        }
+        else{
             return res.status(404).json()
         }
-    }catch(err){
-        return res.status(500).json()
+    }catch(err) {
+        return res.status(500, err).json()
     }
-
-});
-
+})
 
 
 module.exports = router
