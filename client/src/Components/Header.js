@@ -1,9 +1,9 @@
-import React from 'react'
+import React ,{ Component } from 'react'
 
-function Header() {
-  return (
-    <div>Header</div>
-  )
+export default class Header extends Component {
+  render(){
+    return(
+      <div>App Name : {this.props.appName}</div>
+    )
+  }
 }
-
-export default Header
