@@ -2,15 +2,16 @@ var express = require('express');
 var router = express.Router();
 var Product = require('../models/products')
 
-// List Products 
+// List Products  
 router.get('/', async (req, res, next) => {
-  console.log('Run')
+  setTimeout(async() => {
     try{
-        const productList = await Product.find({}).exec()
+        const productList = await Product.find({}).limit(3).exec()
         return res.status(200).json(productList)
     }catch(e){
         res.status(500).json(e)
     }
+},5000)
 
 });
 
