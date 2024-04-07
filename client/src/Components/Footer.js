@@ -1,9 +1,7 @@
 import React from 'react'
 
-function Footer(props) {
-    return (
-      <div>{props.version}</div>
+export default function Footer({ version = '1.0.0'}) {
+  return (
+    <div>Version : {version}</div>
   )
 }
-
-export default Footer
