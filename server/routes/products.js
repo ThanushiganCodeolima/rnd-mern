@@ -11,7 +11,7 @@ router.get('/', async (req, res, next) => {
     }catch(e){
         res.status(500).json(e)
     }
-},5000)
+},2000)
 
 });
 
@@ -32,7 +32,33 @@ router.get('/:id', async (req, res, next) => {
     }
 
 });
+//Com Method 
+/** 
+* @param {*} reqPayload
+* @param {*} validationConfig
+* @returns Array
+*/
+const validateRequestPayload = (reqPayload ={}, validationConfig =[]) =>{
 
+    const isError = [];
+    //const name = reqPayload.name
+    // const price = reqPayload.price
+    // if(!name ) {
+    //    isError = isError + `Name is Required`
+    // }
+    const vConfigLength = validationConfig.length;
+    for(let i = 0; i< vConfigLength; i++){
+        const key = validationConfig[i]
+        const isKeyFound = reqPayload[key];
+        if(!isKeyFound){
+            isError.push({
+            key,
+            error: `${key} is Required`
+            })
+        }
+    }
+    return isError;
+}
 // Create Product
 router.put('/:id', async (req, res, next) => {
     try {
@@ -73,7 +99,8 @@ router.post('/', async (req, res, next) => {
     
     try{
         const {_id, name,description, price,timestamp } = req.body;
-        if(_id && name && description && price && !isNaN(price) && timestamp){
+            const validationConfig = ["name","description", "price","timestamp"];
+            if(!isError.length){
             const newProduct = new Product({"_id":_id,"name":name, "description":description, "price":price, "timestamp":timestamp});
             await newProduct.save()
             // TODO : if product already exsist in db should return 409 
@@ -82,7 +109,7 @@ router.post('/', async (req, res, next) => {
             return res.status(400).json()
         }
     }catch(err){
-        return res.status(500).json(err)
+        return res.status(500).json(isErrorr)
     }
 
 });
