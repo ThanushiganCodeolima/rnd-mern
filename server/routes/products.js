@@ -32,33 +32,7 @@ router.get('/:id', async (req, res, next) => {
     }
 
 });
-//Com Method 
-/** 
-* @param {*} reqPayload
-* @param {*} validationConfig
-* @returns Array
-*/
-const validateRequestPayload = (reqPayload ={}, validationConfig =[]) =>{
 
-    const isError = [];
-    //const name = reqPayload.name
-    // const price = reqPayload.price
-    // if(!name ) {
-    //    isError = isError + `Name is Required`
-    // }
-    const vConfigLength = validationConfig.length;
-    for(let i = 0; i< vConfigLength; i++){
-        const key = validationConfig[i]
-        const isKeyFound = reqPayload[key];
-        if(!isKeyFound){
-            isError.push({
-            key,
-            error: `${key} is Required`
-            })
-        }
-    }
-    return isError;
-}
 // Create Product
 router.put('/:id', async (req, res, next) => {
     try {
