@@ -7,7 +7,7 @@ var { validateRequestPayload } = require('../util/validateRequestPayload')
 router.get('/', async (req, res, next) => {
   setTimeout(async() => {
         try{
-        const productList = await Product.find({}).limit(3).exec()
+            const productList = await Product.find({}).skip((page - 1) * limit).limit(limit).sort({_id : -1 }).exec()
             return res.status(200).json(productList)
         }catch(e){
             res.status(500).json()
