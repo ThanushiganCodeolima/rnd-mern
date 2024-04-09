@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 import Product from './Product';
 import Loading from './Loading';
 import { fetchProducts } from '../Services/apiService';
@@ -38,7 +39,7 @@ export default class RndClsCom extends Component {
         {this.state.isLoading ? 
             <Loading /> : 
             <div>{this.state.products.map((item) => <Product key={item._id} 
-            name={item.name} price={item.price} description={item.description} /> )}</div>
+            name={item.name} price={item.price} desc={item.desc} /> )}</div>
         }        
       </>
     )

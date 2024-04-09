@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api/v1'; // Default URL in case environment variable is missing
-
+const API_BASE_URL = process.env.REACT_APP_API_URL
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
 });
@@ -9,5 +8,5 @@ const apiClient = axios.create({
 // TODO : Add Pagination
 export const fetchProducts = () => apiClient.get('/products');
 export const fetchProductById = (id) => apiClient.get(`/products/${id}`);
-export const createProducts = (payload) => apiClient.post(`/products`, payload);
+export const createProducts = (name,price,desc) => apiClient.post(`/products`, {name,price,desc});
 // TODO : Product -> Create, Update, Delete

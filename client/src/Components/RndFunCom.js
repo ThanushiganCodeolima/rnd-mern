@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import Product from './Product';
 import Loading from './Loading';
 import { fetchProducts } from '../Services/apiService';
@@ -28,7 +29,7 @@ const RndFunCom =  () => {
     {isLoading ? 
             <Loading /> : 
             <div>{products.map((item) => <Product key={item._id}
-             name={item.name} price={item.price} description={item.description} /> )}</div>
+             name={item.name} price={item.price} desc={item.desc} /> )}</div>
         }  
     </>
   )

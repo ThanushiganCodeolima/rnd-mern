@@ -6,10 +6,10 @@ const CreateProduct = () => {
     const [product, setProduct] = useState({name: '', price: 0, desc: ''})
     const [errors, setErrors] = useState({})
 
-    const handleSumbit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault()
         if(validateForm()){            
-            createProducts(product)
+            createProducts(product.name, product.price,product.desc)
               .then((response) => {                
                 setProduct({name: '', price: 0, desc: ''})
               })
@@ -41,7 +41,7 @@ const CreateProduct = () => {
 
     return (
         <>
-            <form onSubmit={handleSumbit}>
+            <form onSubmit={handleSubmit}>
                 <div >
                     <label htmlFor='name'>Name:</label>
                     <input 
