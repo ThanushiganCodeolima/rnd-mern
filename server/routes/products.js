@@ -1,21 +1,36 @@
 var express = require('express');
 var router = express.Router();
 var Product = require('../models/products')
-var { validateRequestPayload } = require('../util/validateRequestPayload')
+var { validateRequestPayload } = require('../util/validateRequestPayload');
+var { config } = require('../config/config');
 
-// List Products 
+//List Products
 router.get('/', async (req, res, next) => {
-       // TODO : Pagination, page = 1, limit = 10 ( default values )
-    const { page = 1, limit = 10 } = req.query
-        try{
-            const productList = await Product.find({}).skip((page - 1) * limit).limit(limit).sort({_id : -1 }).exec()
-            return res.status(200).json(productList)
-        }catch(e){
-            res.status(500).json()
-        }
-
-
-});
+  
+    const page = req.query.page || config.PAGE;
+    const limit = req.query.limit || config.LIMIT;
+    const searchItem = req.query.search;
+  
+    if(searchItem){
+      try{
+        const productList = await Product.find({name : searchItem}).exec()
+        return res.status(200).json(productList)
+      }catch(e){
+        res.status(404).json({ message: '404 error'})
+      }
+      
+    }else
+    {
+      try
+      {
+        const productList = await Product.find({}).skip((page - 1) * limit).limit(limit).sort({_id : -1}).exec()
+        return res.status(200).json(productList)
+      }catch(e){
+        res.status(404).json({ message: '404 error'})
+      }
+    }
+  
+  });
 
 // Product Get By Id 
 router.get('/:id', async (req, res, next) => {
